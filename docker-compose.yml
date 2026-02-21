@@ -1,6 +1,6 @@
 services:
   pinakes:
-    build: .
+    image: ghcr.io/jbenamy/pinakes-docker:latest
     restart: unless-stopped
     volumes:
       - app-code:/var/www/pinakes
