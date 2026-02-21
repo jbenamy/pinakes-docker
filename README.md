@@ -7,7 +7,7 @@ This repository contains the Docker configuration for running [Pinakes](https://
 The setup consists of three main services orchestrated by `docker-compose.yml`:
 
 *   **`pinakes`**: The PHP application itself, running on PHP 8.2-FPM. A pre-built image is published to the GitHub Container Registry (`ghcr.io/jbenamy/pinakes-docker`) on every push to `main` and on tagged releases. You can also build the image locally from the included `Dockerfile`.
-*   **`nginx`**: A lightweight Nginx web server (using the `alpine` image) that serves the application's front-end and acts as a reverse proxy to the PHP-FPM service.
+*   **`nginx`**: A lightweight Nginx web server built from `Dockerfile.nginx`, which bakes `nginx.conf` directly into the image (`ghcr.io/jbenamy/pinakes-docker-nginx`). This makes `docker-compose.yml` fully self-contained with no host file dependencies.
 *   **`mariadb`**: A MariaDB 11 database server for storing the application's data.
 
 ## Features
@@ -107,13 +107,14 @@ volumes:
 ## Directory Structure
 
 *   `docker-compose.yml`: The main Docker Compose file that defines the services.
-*   `Dockerfile`: The Dockerfile for building the `pinakes` PHP-FPM image.
+*   `Dockerfile`: Builds the `pinakes` PHP-FPM image.
+*   `Dockerfile.nginx`: Builds the `nginx` image with the config baked in.
 *   `docker-entrypoint.sh`: The entrypoint script for the `pinakes` container.
-*   `nginx.conf`: The Nginx configuration file.
+*   `nginx.conf`: The Nginx configuration file (baked into the nginx image at build time).
 *   `php-custom.ini`: Custom PHP settings.
 *   `php-fpm-www.conf`: PHP-FPM pool configuration.
-*   `.dockerignore`: Specifies files to ignore when building the Docker image.
-*   `.github/workflows/docker-publish.yml`: GitHub Actions workflow that builds the image for `linux/amd64` and `linux/arm64` and pushes it to `ghcr.io` on every push to `main` and on `v*` tags.
+*   `.dockerignore`: Specifies files to ignore when building the Docker images.
+*   `.github/workflows/docker-publish.yml`: GitHub Actions workflow that builds and pushes both the `pinakes` and `nginx` images to `ghcr.io` on every push to `main` and on `v*` tags.
 
 ## Contributing
 
