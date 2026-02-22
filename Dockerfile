@@ -55,6 +55,9 @@ RUN tar xzf /tmp/pinakes.tar.gz --strip-components=1 -C . \
     && composer install --no-dev --no-interaction --optimize-autoloader \
     && rm /usr/bin/composer
 
+# Preserve bundled plugins so the entrypoint can seed a bind-mounted plugins directory
+RUN cp -r storage/plugins /var/www/pinakes-plugins-seed
+
 # Writable directories with correct ownership
 RUN mkdir -p \
         storage/backups \

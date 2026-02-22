@@ -49,6 +49,19 @@ done
 chown -R www-data:www-data "${APP_DIR}/storage" "${APP_DIR}/public/uploads"
 
 # ---------------------------------------------------------------------------
+# Seed plugins from image defaults if the directory is empty
+# (handles first run when storage/plugins is bind-mounted from the host)
+# ---------------------------------------------------------------------------
+PLUGINS_DIR="${APP_DIR}/storage/plugins"
+SEED_DIR="/var/www/pinakes-plugins-seed"
+if [ -d "$SEED_DIR" ] && [ -z "$(ls -A "$PLUGINS_DIR" 2>/dev/null)" ]; then
+    echo ">> Seeding plugins from image defaults …"
+    cp -r "${SEED_DIR}/." "$PLUGINS_DIR/"
+    chown -R www-data:www-data "$PLUGINS_DIR"
+    echo ">> Plugins seeded."
+fi
+
+# ---------------------------------------------------------------------------
 # Wait for the database to be reachable
 # ---------------------------------------------------------------------------
 echo ">> Waiting for database at ${DB_HOST:-mariadb}:${DB_PORT:-3306} …"

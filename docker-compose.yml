@@ -6,6 +6,7 @@ services:
       - app-code:/var/www/pinakes                                    # app code (shared with nginx)
       - ./data/backups:/var/www/pinakes/storage/backups             # database backups
       - ./data/logs:/var/www/pinakes/storage/logs                   # application logs
+      - ./data/plugins:/var/www/pinakes/storage/plugins             # plugins (seeded from image on first run)
       - ./data/uploads:/var/www/pinakes/public/uploads              # book cover images
     environment:
       DB_HOST: mariadb
