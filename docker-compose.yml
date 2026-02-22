@@ -3,9 +3,10 @@ services:
     image: ghcr.io/jbenamy/pinakes-docker:latest
     restart: unless-stopped
     volumes:
-      - app-code:/var/www/pinakes                          # app code (shared with nginx)
-      - ./data/storage:/var/www/pinakes/storage            # logs, backups, plugins, cache
-      - ./data/uploads:/var/www/pinakes/public/uploads     # book cover images
+      - app-code:/var/www/pinakes                                    # app code (shared with nginx)
+      - ./data/backups:/var/www/pinakes/storage/backups             # database backups
+      - ./data/logs:/var/www/pinakes/storage/logs                   # application logs
+      - ./data/uploads:/var/www/pinakes/public/uploads              # book cover images
     environment:
       DB_HOST: mariadb
       DB_USER: pinakes
