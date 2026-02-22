@@ -105,6 +105,20 @@ APP_CANONICAL_URL: https://library.example.com
 
 If using Nginx Proxy Manager, disable **Block Common Exploits** on the proxy host. NPM sets the same security headers (`X-Frame-Options`, `X-Content-Type-Options`, etc.) that the nginx image already sets, and duplicate headers can cause browser errors.
 
+### Persistent data
+
+All persistent data is stored in a `./data/` directory next to `docker-compose.yml` on the host:
+
+| Host path            | Container path                          | Contents                          |
+| -------------------- | --------------------------------------- | --------------------------------- |
+| `./data/db/`         | `/var/lib/mysql`                        | MariaDB data files                |
+| `./data/uploads/`    | `/var/www/pinakes/public/uploads`       | Book cover images                 |
+| `./data/backups/`    | `/var/www/pinakes/storage/backups`      | Database backups                  |
+| `./data/logs/`       | `/var/www/pinakes/storage/logs`         | Application logs                  |
+| `./data/plugins/`    | `/var/www/pinakes/storage/plugins`      | Plugins (bundled + user-installed)|
+
+On first run, if `./data/plugins/` is empty the entrypoint automatically seeds it with the bundled plugins from the image (`open-library`, `z39-server`, etc.). On subsequent starts the directory is left as-is, so user-installed plugins persist.
+
 ### Custom `.env` override
 
 The entrypoint skips auto-generating `.env` if the file already exists in the container. You can supply your own by adding a bind mount to the `pinakes` service in `docker-compose.yml`:
