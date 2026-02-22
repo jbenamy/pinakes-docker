@@ -3,7 +3,9 @@ services:
     image: ghcr.io/jbenamy/pinakes-docker:latest
     restart: unless-stopped
     volumes:
-      - app-code:/var/www/pinakes
+      - app-code:/var/www/pinakes                          # app code (shared with nginx)
+      - ./data/storage:/var/www/pinakes/storage            # logs, backups, plugins, cache
+      - ./data/uploads:/var/www/pinakes/public/uploads     # book cover images
     environment:
       DB_HOST: mariadb
       DB_USER: pinakes
@@ -21,7 +23,8 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - app-code:/var/www/pinakes:ro
+      - app-code:/var/www/pinakes:ro                       # app code (read-only)
+      - ./data/uploads:/var/www/pinakes/public/uploads:ro  # book cover images (read-only)
     depends_on:
       - pinakes
 
@@ -29,7 +32,7 @@ services:
     image: mariadb:11
     restart: unless-stopped
     volumes:
-      - db-data:/var/lib/mysql
+      - ./data/db:/var/lib/mysql
     environment:
       MARIADB_DATABASE: pinakes
       MARIADB_USER: pinakes
@@ -43,4 +46,3 @@ services:
 
 volumes:
   app-code:
-  db-data:
