@@ -9,6 +9,8 @@ services:
       DB_USER: pinakes
       DB_PASS: pinakes
       DB_NAME: pinakes
+      # Set this to your public URL when running behind a reverse proxy (e.g. Nginx Proxy Manager)
+      # APP_CANONICAL_URL: https://library.example.com
     depends_on:
       mariadb:
         condition: service_healthy
