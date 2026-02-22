@@ -95,6 +95,16 @@ The `pinakes` image accepts one build argument, passed with `--build-arg`:
 
 Example: `docker-compose build --build-arg PINAKES_REF=v1.2.3`
 
+### Reverse proxy (e.g. Nginx Proxy Manager)
+
+The nginx image automatically forwards `X-Forwarded-Proto`, `X-Forwarded-For`, and `X-Real-IP` headers to PHP-FPM, so PHP correctly detects HTTPS when SSL is terminated upstream. You must also set `APP_CANONICAL_URL` to your public URL in `docker-compose.yml`:
+
+```yaml
+APP_CANONICAL_URL: https://library.example.com
+```
+
+If using Nginx Proxy Manager, disable **Block Common Exploits** on the proxy host. NPM sets the same security headers (`X-Frame-Options`, `X-Content-Type-Options`, etc.) that the nginx image already sets, and duplicate headers can cause browser errors.
+
 ### Custom `.env` override
 
 The entrypoint skips auto-generating `.env` if the file already exists in the container. You can supply your own by adding a bind mount to the `pinakes` service in `docker-compose.yml`:
